@@ -29,6 +29,7 @@ class LimitService():
         contract = await self._contract_repo.filter_one(company_id=company_id, dmtt_id=dmtt_instance.id)
         if not contract:
             raise not_found_exception("Contract")
+
         data = await self._sheet_data_fetcher.get_data(sheet_url=contract.excel_url, sheet_name=contract.active_sheet_name)
 
         # Преобразование данных в список объектов LimitInfo

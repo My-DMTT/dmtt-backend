@@ -1,8 +1,8 @@
 from typing import List, Optional
 
-from src.domain.exceptions import bad_request_exception, not_found_exception
 from src.api.schemas.company_schema import (CompanyCreate, CompanyInfo,
-                                             CompanyUpdate)
+                                            CompanyUpdate)
+from src.domain.exceptions import bad_request_exception, not_found_exception
 from src.infrastructure.repositories.company_repo import CompanyRepo
 
 
@@ -27,7 +27,7 @@ class CompanyService:
         :param data: CompanyCreate instance containing the company data.
         :raises BadRequestException: If a company with the same STIR exists.
         """
-        
+
         if await self._repo.is_exists(stir=data.stir):
             raise bad_request_exception("This STIR already exists.")
         return await self._repo.create(user_id, data)
@@ -52,11 +52,12 @@ class CompanyService:
         :returns: A message indicating deletion.
         """
         company = await self._repo.get(instance_id=id)
+        if not company:
+            raise not_found_exception("Company")
         if company.user_id != user_id:
             raise not_found_exception(name="Company")
         await self._repo.delete(instance_id=id)
         return {"detail": "Company deleted successfully."}
-        
 
     async def get_company_by_id(self, id: int, user_id: int) -> CompanyInfo:
         """
@@ -66,6 +67,6 @@ class CompanyService:
         :raises NotFoundException: If no company is found with the provided ID.
         """
         company = await self._repo.get(instance_id=id)
-        if not company or company.user_id!=user_id:
+        if not company or company.user_id != user_id:
             raise not_found_exception(name="Company")
         return company

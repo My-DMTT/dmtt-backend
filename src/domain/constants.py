@@ -11,3 +11,4 @@ DB_DIALECT = config('DB_DIALECT', "mysql+mysqldb")
 # DATABASE_URL = f"{DB_DIALECT}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 DATABASE_URL = "sqlite:///./test.db"
 JWT_SECRET_KEY = "ghfgugfyuasgfiagdubhbfbjfbsdjhfbsdjh"
+BOT_API_URL = config("BOT_API_URL", "localhost")

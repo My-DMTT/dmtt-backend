@@ -11,6 +11,7 @@ from src.infrastructure.database.adapters.database import get_db
 from src.infrastructure.models.user import User, UserRoleEnum
 from src.infrastructure.repositories.jwt_token_repo import JWTTokenRepo
 from src.infrastructure.services.token_service import TokenService
+from src.services.user_service import UsersService
 
 _token_service = TokenService()
 _jwt_token_repo = JWTTokenRepo()
@@ -61,6 +62,15 @@ async def get_admin(user: User = Depends(get_current_user)):
         detail="You don't have permission to access this resource",
         headers={"WWW-Authenticate": "Bearer"},
     )
+
+user_service = UsersService()
+
+
+async def get_user_by_tg_id(tg_user_id: str):
+    user = await user_service.get_user_tg_id(tg_user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
 
 async def get_current_manager(user: User = Depends(get_current_user)):

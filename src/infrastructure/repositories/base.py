@@ -43,10 +43,12 @@ class DeleteMixin:
     async def delete(self, instance_id: int) -> None:
         with get_db() as session:
             session.query(self.model).filter_by(id=instance_id).delete()
+            session.commit()
 
     async def delete_multi(self, **kwargs) -> None:
         with get_db() as session:
             session.query(self.model).filter_by(**kwargs).delete()
+            session.commit()
 
 
 class ExistsMixin:

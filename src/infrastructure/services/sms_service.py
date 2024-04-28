@@ -19,6 +19,5 @@ def send_sms(phone_number, data):
     res = _client._send_sms(
         phone_number=phone_number, message=f"Your code is {data}"
     )
-    print(res)
 
     return True

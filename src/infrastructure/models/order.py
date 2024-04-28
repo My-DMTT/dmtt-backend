@@ -2,6 +2,7 @@ import enum
 
 from sqlalchemy import (Column, DateTime, Enum, Float, ForeignKey, Integer,
                         String, func)
+from sqlalchemy.orm import relationship
 
 from src.infrastructure.models.base import BaseModel
 
@@ -18,16 +19,20 @@ class Order(BaseModel):
 
     company_id = Column(Integer, ForeignKey(
         "company.id", ondelete="Cascade"), nullable=False)
-    user_id = Column(Integer, ForeignKey(
-        "users.id", ondelete="Cascade"), nullable=False)
     dmtt_id = Column(Integer, ForeignKey(
         "dmtt.id", ondelete="Cascade"), nullable=False)
     datetime = Column(DateTime, server_default=func.now())
     order_status = Column(Enum(OrderStatus), default=OrderStatus.PENDING)
 
+    company = relationship("Company")
+    dmtt = relationship("Dmtt")
+    items = relationship("OrderItems", back_populates="order")
+
 
 class OrderItems(BaseModel):
     __tablename__ = "order_items"
     order_id = Column(ForeignKey("orders.id", ondelete="Cascade"))
-    name = Column(String(127), nullable=False)
+    product_name = Column(String(127), nullable=False)
     count = Column(Float, nullable=False)
+
+    order = relationship("Order", back_populates="items")

@@ -1,6 +1,8 @@
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import contains_eager, joinedload
 
 from src.infrastructure.database.adapters.database import get_db
+from src.infrastructure.models.company import Company
+from src.infrastructure.models.dmtt import Dmtt
 from src.infrastructure.models.order import Order, OrderItems
 from src.infrastructure.repositories.base import CRUDRepoBase
 
@@ -8,23 +10,58 @@ from src.infrastructure.repositories.base import CRUDRepoBase
 class OrderRepo(CRUDRepoBase):
     model = Order
 
-    async def get_orders_by_status_with_items(self, status):
+    async def get_orders_by_status_with_items(self, user_id, status):
         with get_db() as session:
-            return session.query(Order).filter(Order.order_status == status).join(OrderItems).all()
+            return (
+                session.query(Order)
+                .filter(Order.order_status == status)
+                .options(joinedload(Order.dmtt), joinedload(Order.items))
+                .join(Company, Company.id == Order.company_id)
+                .filter(Company.user_id == user_id)
+                .all()
+            )
 
-    async def get_all_orders_with_items(self):
+    async def change_status(self, id, status):
         with get_db() as session:
-            return session.query(Order).join(OrderItems).all()
+            with get_db() as session:
+                session.query(Order).filter_by(id=id).update({
+                    "order_status": status
+                })
+                session.commit()
 
-    async def create_order_with_items(self, obj_in) -> Order:
+    async def get_orders_by_status_dmtt(self, user_id, status):
         with get_db() as session:
-            new_order = Order(user_id=obj_in.user_id, dmtt_id=obj_in.dmtt_id)
+            return (
+                session.query(Order)
+                .filter(Order.order_status == status)
+                .options(joinedload(Order.dmtt), joinedload(Order.items))
+                .join(Dmtt, Dmtt.id == Order.dmtt_id)
+                .options(contains_eager(Order.dmtt))
+                .filter(Dmtt.user_id == user_id)
+                .all()
+            )
+
+    async def get_order_with_items(self, order_id):
+        with get_db() as session:
+            return (
+                session.query(Order)
+                .options(joinedload(Order.items), joinedload(Order.dmtt))
+                .filter(Order.id == order_id)
+                .first()
+            )
+
+    async def create_order_with_items(self, dmtt_id, company_id, obj_in) -> Order:
+        with get_db() as session:
+            new_order = Order(company_id=company_id, dmtt_id=dmtt_id)
             session.add(new_order)
             session.flush()
 
-            for item_data in obj_in.items:
+            for item_data in obj_in:
                 order_item = OrderItems(
-                    order_id=new_order.id, product_id=item_data.product_id, count=item_data.count)
+                    order_id=new_order.id,
+                    product_name=item_data.get("product_name"),
+                    count=item_data.get("count"),
+                )
                 session.add(order_item)
 
             session.commit()

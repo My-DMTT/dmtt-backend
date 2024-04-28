@@ -9,7 +9,8 @@ from starlette.requests import Request
 
 from src.infrastructure.database.adapters.database import engine
 from src.infrastructure.models import (Company, Connection, Contract, Dmtt,
-                                       Limit, LimitItem, Period, Product, User)
+                                       Limit, LimitItem, Order, Period,
+                                       Product, User)
 from src.infrastructure.services.token_service import TokenService
 
 app = Starlette()
@@ -54,6 +55,10 @@ class ContractAdmin(ModelView, model=Contract):
     column_list = ["dmtt", "company"]
 
 
+class OrderAdmin(ModelView, model=Order):
+    column_list = ["id", "dmtt", "company"]
+
+
 class UserAdmin(ModelView, model=User):
     name = "User"
     name_plural = "Users"
@@ -85,3 +90,4 @@ admin.add_view(CompanyAdmin)
 admin.add_view(UserAdmin)
 admin.add_view(DmttAdmin)
 admin.add_view(ContractAdmin)
+admin.add_view(OrderAdmin)

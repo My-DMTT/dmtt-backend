@@ -6,6 +6,7 @@ from src.api.controllers.contract_router import router as contract_router
 from src.api.controllers.dmtt_router import router as dmmt_router
 from src.api.controllers.image_router import router as image_router
 from src.api.controllers.limit_router import router as limit_router
+from src.api.controllers.order_router import router as orders_router
 from src.api.controllers.product_router import router as product_router
 from src.api.controllers.user_router import router as manager_router
 
@@ -21,3 +22,5 @@ router.include_router(product_router)
 router.include_router(image_router)
 router.include_router(manager_router)
 router.include_router(company_router)
+
+router.include_router(orders_router)
