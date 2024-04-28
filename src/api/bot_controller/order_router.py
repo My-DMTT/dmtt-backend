@@ -19,17 +19,17 @@ async def get_accepted_orders(user=Depends(get_user_by_tg_id)):
     return await order_service.get_accepted_orders_with_items(user.id)
 
 
-@router.post("/orders/accepted/", response_model=List[OrderResponse])
+@router.post("/orders/accepted/")
 async def post_accepted_orders(order_id: int, user=Depends(get_user_by_tg_id)):
     return await order_service.change_order_status(order_id, OrderStatus.ACCEPTED)
 
 
-@router.post("/orders/rejected/", response_model=List[OrderResponse])
+@router.post("/orders/rejected/")
 async def post_accepted_orders(order_id: int, user=Depends(get_user_by_tg_id)):
     return await order_service.change_order_status(order_id, OrderStatus.REJECTED)
 
 
-@router.post("/orders/in-progress/", response_model=List[OrderResponse])
+@router.post("/orders/in-progress/")
 async def post_accepted_orders(order_id: int, user=Depends(get_user_by_tg_id)):
     return await order_service.change_order_status(order_id, OrderStatus.IN_PROGRESS)
 
