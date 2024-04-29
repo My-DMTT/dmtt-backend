@@ -28,6 +28,9 @@ class Order(BaseModel):
     dmtt = relationship("Dmtt")
     items = relationship("OrderItems", back_populates="order")
 
+    def __str__(self):
+        return f"{self.dmtt} - {self.id}"
+
 
 class OrderItems(BaseModel):
     __tablename__ = "order_items"
@@ -36,3 +39,6 @@ class OrderItems(BaseModel):
     count = Column(Float, nullable=False)
 
     order = relationship("Order", back_populates="items")
+
+    def __str__(self) -> str:
+        return f"{self.product_name} {self.count}"
