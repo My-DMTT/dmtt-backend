@@ -71,7 +71,11 @@ class OrderService():
             )
             data_list = [
                 DataModel(product_name=item.product_name, count=item.count) for item in items]
-            await self._spread_service.add_data(data_list=data_list)
+            await self._spread_service.add_data(
+                sheet_name=contract.sheet_name,
+                sheet_url=contract.sheet_url,
+                data_list=data_list
+            )
 
     async def get_order_by_id(self, order_id):
         return await self._order_repo.get_order_with_items(order_id)
@@ -90,6 +94,7 @@ class OrderService():
 
 
 #
+
 
     async def get_accepted_orders_dmtt(self, user_id):
         return await self._order_repo.get_orders_by_status_dmtt(user_id, OrderStatus.ACCEPTED)
