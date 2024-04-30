@@ -68,9 +68,9 @@ user_service = UsersService()
 
 async def get_user_by_tg_id(tg_user_id: str):
     user = await user_service.get_user_tg_id(tg_user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
+    if user and user.role in (UserRoleEnum.business_man, UserRoleEnum.superuser):
+        return user
+    raise HTTPException(status_code=404, detail="User not found")
 
 
 async def get_current_manager(user: User = Depends(get_current_user)):
