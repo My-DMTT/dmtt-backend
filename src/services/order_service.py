@@ -65,7 +65,8 @@ class OrderService():
                     raise not_found_exception("order")
                 contract = await self._contract_repo.filter_one(dmtt_id=order.dmtt_id, company_id=order.company_id)
                 if not contract:
-                    return None
+
+                    return {"mesage": "ok"}
 
                 items = await self._order_items_repo.filter(
                     order_id=order.id
@@ -97,7 +98,6 @@ class OrderService():
 
 
 #
-
 
     async def get_accepted_orders_dmtt(self, user_id):
         return await self._order_repo.get_orders_by_status_dmtt(user_id, OrderStatus.ACCEPTED)
