@@ -7,10 +7,14 @@ from src.domain.constants import BOT_API_URL
 from src.domain.exceptions import not_found_exception
 from src.infrastructure.models.order import OrderStatus
 from src.infrastructure.repositories.company_repo import CompanyRepo
+from src.infrastructure.repositories.contract_repo import ContractRepo
 from src.infrastructure.repositories.dmtt_repo import DmttRepo
-from src.infrastructure.repositories.order_repo import OrderRepo
+from src.infrastructure.repositories.order_repo import (OrderItemsRepo,
+                                                        OrderRepo)
 from src.infrastructure.repositories.product_repo import ProductRepo
 from src.infrastructure.repositories.user_repo import UserRepo
+from src.infrastructure.services.excel_service import (DataModel,
+                                                       SheetDataFetcher)
 
 
 class OrderService():
@@ -20,6 +24,9 @@ class OrderService():
         self._dmtt_repo = DmttRepo()
         self._user_repo = UserRepo()
         self._company_repo = CompanyRepo()
+        self._spread_service = SheetDataFetcher()
+        self._contract_repo = ContractRepo
+        self._order_items_repo = OrderItemsRepo()
 
     async def create_order_with_items(self, user_id, order_data_list: List[OrderCreate]):
         dmtt = await self._dmtt_repo.filter_one(user_id=user_id)
@@ -51,6 +58,18 @@ class OrderService():
 
     async def change_order_status(self, order_id, status):
         await self._order_repo.change_status(order_id, status)
+        if status == OrderStatus.ACCEPTED:
+            order = await self._order_repo.get(order_id)
+            if not order:
+                raise not_found_exception("order")
+            contract = await self._company_repo.filter_one(dmtt_id=order.dmtt_id, company_id=order.company_id)
+            if not contract:
+                return None
+            data_list = []
+            items = self._order_items_repo
+            # await self._spread_service.add_data(
+
+            # )
 
     async def get_order_by_id(self, order_id):
         return await self._order_repo.get_order_with_items(order_id)
