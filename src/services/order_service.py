@@ -72,8 +72,8 @@ class OrderService():
             data_list = [
                 DataModel(product_name=item.product_name, count=item.count) for item in items]
             await self._spread_service.add_data(
-                sheet_name=contract.sheet_name,
-                sheet_url=contract.sheet_url,
+                sheet_name=contract.active_sheet_name,
+                sheet_url=contract.excel_url,
                 data_list=data_list
             )
 
