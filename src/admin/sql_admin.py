@@ -60,7 +60,7 @@ class OrderAdmin(ModelView, model=Order):
 
 
 class OrderItemAdmin(ModelView, model=OrderItems):
-    column_list = "__all__"
+    column_list = ["product_name", "count"]
 
 
 class UserAdmin(ModelView, model=User):
