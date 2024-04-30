@@ -35,8 +35,6 @@ class OrderRepo(CRUDRepoBase):
                 session.query(Order)
                 .filter(Order.order_status == status)
                 .options(joinedload(Order.dmtt), joinedload(Order.items))
-                .join(Dmtt, Dmtt.id == Order.dmtt_id)
-                .options(contains_eager(Order.dmtt))
                 .filter(Dmtt.user_id == user_id)
                 .all()
             )
