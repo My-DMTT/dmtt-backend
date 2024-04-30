@@ -24,8 +24,8 @@ async def get_rejected_orders(user=Depends(get_current_user)):
 
 
 @router.get("/orders/pending", response_model=List[OrderResponse])
-async def get_pending_orders():
-    return await order_service.get_pending_orders_dmtt(10)
+async def get_pending_orders(user=Depends(get_current_user)):
+    return await order_service.get_pending_orders_dmtt(user.id)
 
 
 @router.get("/orders/in-progress", response_model=List[OrderResponse])
