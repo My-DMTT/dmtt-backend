@@ -21,7 +21,8 @@ class SheetDataFetcher:
             filename)
         self.client = gspread.authorize(self.credentials)
 
-    async def get_data(self, sheet_url, sheet_name):
+    def get_data(self, sheet_url="https://docs.google.com/spreadsheets/d/1-Uz2puXapAvyNw2bkrdwQLRZ4rRn6gd8Tnh2Ck6vvvA/edit?copiedFromTrash#gid=0",
+                 sheet_name="December"):
         try:
             spreadsheet = self.client.open_by_url(sheet_url)
             worksheet = spreadsheet.worksheet(sheet_name)
@@ -40,9 +41,10 @@ class SheetDataFetcher:
         try:
             spreadsheet = self.client.open_by_url(sheet_url)
             worksheet = spreadsheet.worksheet(sheet_name)
-            df = pd.DataFrame(worksheet.get_all_records())
-            headers = [item for item in df.head(0)]
-            row_count = df.count(axis='rows')["T/r"]
+            values = worksheet.get_all_values()
+
+            headers = values[0]
+            row_count = len(values)
 
             new_name = self._get_date()
             if new_name not in headers:
@@ -55,11 +57,13 @@ class SheetDataFetcher:
 
                 for item in data_list:
 
-                    row_data = df[df['Mahsulot nomi'] == item.product_name]
-                    result_list = [row['T/r']
-                                   for index, row in row_data.iterrows()]
-                    for result in result_list:
-                        new_data[result] = item.count
+                    new_index = -1
+                    for value in values[1:]:
+                        if value[1] == item.product_name:
+                            new_index = int(value[0])
+                            break
+                    if new_index > -1:
+                        new_data[new_index] = item.count
 
                 cell_list = worksheet.range(
                     1, new_coumn_index, len(new_data), new_coumn_index)
@@ -79,8 +83,9 @@ class SheetDataFetcher:
 
 # Example usage:
 s = SheetDataFetcher()
-
+k = s.get_data()
 s.add_data(data_list=[
-    DataModel(product_name="Manniy yormasi", count=5),
+    DataModel(product_name="Manniy yormasi", count=6),
     DataModel(product_name="Bug'doy uni", count=10)
 ])
+# print(k)
