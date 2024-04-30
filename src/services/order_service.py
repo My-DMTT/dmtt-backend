@@ -25,7 +25,7 @@ class OrderService():
         self._user_repo = UserRepo()
         self._company_repo = CompanyRepo()
         self._spread_service = SheetDataFetcher()
-        self._contract_repo = ContractRepo
+        self._contract_repo = ContractRepo()
         self._order_items_repo = OrderItemsRepo()
 
     async def create_order_with_items(self, user_id, order_data_list: List[OrderCreate]):
@@ -62,14 +62,16 @@ class OrderService():
             order = await self._order_repo.get(order_id)
             if not order:
                 raise not_found_exception("order")
-            contract = await self._company_repo.filter_one(dmtt_id=order.dmtt_id, company_id=order.company_id)
+            contract = await self._contract_repo.filter_one(dmtt_id=order.dmtt_id, company_id=order.company_id)
             if not contract:
                 return None
-            data_list = []
-            items = self._order_items_repo
-            # await self._spread_service.add_data(
 
-            # )
+            items = await self._order_items_repo.filter(
+                order_id=order.id
+            )
+            data_list = [
+                DataModel(product_name=item.product_name, count=item.count) for item in items]
+            await self._spread_service.add_data(data_list=data_list)
 
     async def get_order_by_id(self, order_id):
         return await self._order_repo.get_order_with_items(order_id)

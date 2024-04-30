@@ -44,7 +44,7 @@ class SheetDataFetcher():
             worksheet = spreadsheet.worksheet(sheet_name)
             df = pd.DataFrame(worksheet.get_all_records())
             headers = [item for item in df.head(0)]
-            row_count = df.count(axis='rows')["T/r"]
+            row_count = df.count(axis='rows')["T/r"]+1
 
             new_name = self._get_date()
             if new_name not in headers:
@@ -75,7 +75,7 @@ class SheetDataFetcher():
 
     def _get_date(self):
         current_date = datetime.now()
-        formatted_date = current_date.strftime('%d/%m/%Y')
+        formatted_date = current_date.strftime('%d/%m/%y')
         return formatted_date
 
 # Example usage:
