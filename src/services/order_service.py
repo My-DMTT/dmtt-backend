@@ -59,26 +59,23 @@ class OrderService():
     async def change_order_status(self, order_id, status):
         await self._order_repo.change_status(order_id, status)
         if status == OrderStatus.ACCEPTED:
-            try:
-                order = await self._order_repo.get(order_id)
-                if not order:
-                    raise not_found_exception("order")
-                contract = await self._contract_repo.filter_one(dmtt_id=order.dmtt_id, company_id=order.company_id)
-                if not contract:
-                    return {"mesage": "ok"}
+            order = await self._order_repo.get(order_id)
+            if not order:
+                raise not_found_exception("order")
+            contract = await self._contract_repo.filter_one(dmtt_id=order.dmtt_id, company_id=order.company_id)
+            if not contract:
+                return {"mesage": "ok"}
 
-                items = await self._order_items_repo.filter(
-                    order_id=order.id
-                )
-                data_list = [
-                    DataModel(product_name=item.product_name, count=item.count) for item in items]
-                await self._spread_service.add_data(
-                    sheet_name=contract.active_sheet_name,
-                    sheet_url=contract.excel_url,
-                    data_list=data_list
-                )
-            except Exception as e:
-                raise not_found_exception(str(e.args))
+            items = await self._order_items_repo.filter(
+                order_id=order.id
+            )
+            data_list = [
+                DataModel(product_name=item.product_name, count=item.count) for item in items]
+            await self._spread_service.add_data(
+                sheet_name=contract.active_sheet_name,
+                sheet_url=contract.excel_url,
+                data_list=data_list
+            )
 
     async def get_order_by_id(self, order_id):
         return await self._order_repo.get_order_with_items(order_id)
@@ -97,6 +94,7 @@ class OrderService():
 
 
 #
+
 
     async def get_accepted_orders_dmtt(self, user_id):
         return await self._order_repo.get_orders_by_status_dmtt(user_id, OrderStatus.ACCEPTED)
