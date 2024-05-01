@@ -37,13 +37,14 @@ class LimitService():
         # Преобразование данных в список объектов LimitInfo
         limit_info_list = []
 
-        for row in data[1:]:
+        for row in data:
             name = row[self.name_column]
             measure = row[self.measure_column]
             limit = row[self.limit_column]
             count = row[self.count_column]
             product = await self._product_repo.get_or_create(name, measure)
-
+            if name == self.name_column:
+                continue
             limit_info = LimitInfo(
                 name=name,
                 measure=measure,
@@ -52,5 +53,4 @@ class LimitService():
                 image_url=product.image_url
             )
             limit_info_list.append(limit_info)
-        limit_info_list.pop(0)
         return limit_info_list
