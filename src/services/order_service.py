@@ -61,7 +61,7 @@ class OrderService():
             order = await self._order_repo.get(order_id)
             if not order:
                 raise not_found_exception("order")
-            if order.status == status:
+            if order.order_status == status:
                 raise not_found_exception("order")
             contract = await self._contract_repo.filter_one(dmtt_id=order.dmtt_id, company_id=order.company_id)
             if not contract:
