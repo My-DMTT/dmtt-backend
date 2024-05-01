@@ -17,6 +17,7 @@ class OrderRepo(CRUDRepoBase):
                 .filter(Order.order_status == status)
                 .options(joinedload(Order.dmtt), joinedload(Order.items))
                 .join(Company, Company.id == Order.company_id)
+                .options(contains_eager(Order.company))
                 .filter(Company.user_id == user_id)
                 .all()
             )
@@ -34,7 +35,7 @@ class OrderRepo(CRUDRepoBase):
             return (
                 session.query(Order)
                 .filter(Order.order_status == status)
-                .options(joinedload(Order.items))
+                .options(joinedload(Order.items),joinedload(Order.company))
                 .join(Dmtt, Dmtt.id == Order.dmtt_id)
                 .options(contains_eager(Order.dmtt))
                 .filter(Dmtt.user_id == user_id)
