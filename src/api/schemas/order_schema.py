@@ -1,5 +1,5 @@
 from typing import List, Optional
-
+from datetime import datetime
 from pydantic import BaseModel
 
 from src.api.schemas.dmtt_schema import DmttInfo
@@ -26,7 +26,7 @@ class OrderResponse(BaseModel):
     dmtt: Optional[DmttInfo]
     company:Optional[CompanyInfo]
     order_status: str
-    datetime:str
+    datetime:Optional[datetime]
     items: List[OrderItemInfo]
 
     class Config:
@@ -37,7 +37,7 @@ class BotOrderResponse(BaseModel):
     id: int
     # dmtt: Optional[DmttInfo]
     order_status: str
-    datetime:str
+    datetime:Optional[datetime]
     items: List[OrderItemInfo]
 
     class Config:
