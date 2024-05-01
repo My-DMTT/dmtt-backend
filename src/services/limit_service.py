@@ -37,7 +37,7 @@ class LimitService():
         # Преобразование данных в список объектов LimitInfo
         limit_info_list = []
 
-        for row in data:
+        for row in data[1:]:
             name = row[self.name_column]
             measure = row[self.measure_column]
             limit = row[self.limit_column]
