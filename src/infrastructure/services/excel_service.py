@@ -75,9 +75,11 @@ class SheetDataFetcher():
             cell_list = worksheet.range(
                 1, new_coumn_index, len(new_data), new_coumn_index)
             for i, cell in enumerate(cell_list):
-                if new_data[i] != 0:
+                if i == 0:
+                    cell.value = new_data[i]
+
+                elif new_data[i] != 0:
                     cell.value = float(new_data[i])
-                # print(cell_list)
             worksheet.update_cells(cell_list)
             return True
         except Exception as e:
