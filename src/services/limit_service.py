@@ -42,9 +42,10 @@ class LimitService():
             measure = row[self.measure_column]
             limit = row[self.limit_column]
             count = row[self.count_column]
-            product = await self._product_repo.get_or_create(name, measure)
             if index == 0:
                 continue
+            product = await self._product_repo.get_or_create(name, measure)
+
             limit_info = LimitInfo(
                 name=name,
                 measure=measure,
