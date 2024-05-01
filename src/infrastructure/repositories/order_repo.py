@@ -45,7 +45,7 @@ class OrderRepo(CRUDRepoBase):
         with get_db() as session:
             return (
                 session.query(Order)
-                .options(joinedload(Order.items), joinedload(Order.dmtt))
+                .options(joinedload(Order.items), joinedload(Order.dmtt),joinedload(Order.company))
                 .filter(Order.id == order_id)
                 .first()
             )

@@ -3,7 +3,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 from src.api.schemas.dmtt_schema import DmttInfo
-
+from src.api.schemas.company_schema import CompanyInfo
 
 class OrderItemInfo(BaseModel):
     product_name: str
@@ -24,8 +24,9 @@ class ListOrderCreate(BaseModel):
 class OrderResponse(BaseModel):
     id: int
     dmtt: Optional[DmttInfo]
+    company:Optional[CompanyInfo]
     order_status: str
-
+    datetime:str
     items: List[OrderItemInfo]
 
     class Config:
@@ -36,7 +37,7 @@ class BotOrderResponse(BaseModel):
     id: int
     # dmtt: Optional[DmttInfo]
     order_status: str
-
+    datetime:str
     items: List[OrderItemInfo]
 
     class Config:
