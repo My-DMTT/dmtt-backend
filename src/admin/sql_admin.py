@@ -94,9 +94,10 @@ class CompanyAdmin(ModelView, model=Company):
     column_list = "__all__"
 
 
-admin.add_view(CompanyAdmin)
 admin.add_view(UserAdmin)
 admin.add_view(DmttAdmin)
+admin.add_view(CompanyAdmin)
 admin.add_view(ContractAdmin)
+admin.add_view(ProductAdmin)
 admin.add_view(OrderAdmin)
 admin.add_view(OrderItemAdmin)
