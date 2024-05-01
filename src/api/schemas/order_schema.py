@@ -46,4 +46,4 @@ class BotOrderResponse(BaseModel):
 class OrderCreate(BaseModel):
     company_id: int
     product_name: str
-    count: int
+    count: float
