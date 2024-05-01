@@ -70,14 +70,14 @@ class SheetDataFetcher():
                         new_index = int(value[0])
                         break
                 if new_index > -1:
-
                     new_data[new_index] = float(new_data[new_index])+item.count
 
             cell_list = worksheet.range(
                 1, new_coumn_index, len(new_data), new_coumn_index)
             for i, cell in enumerate(cell_list):
                 if new_data[i] != 0:
-                    cell.value = new_data[i]
+                    cell.value = float(new_data[i])
+                # print(cell_list)
             worksheet.update_cells(cell_list)
             return True
         except Exception as e:
