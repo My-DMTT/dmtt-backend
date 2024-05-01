@@ -8,6 +8,7 @@ from src.domain.exceptions import not_found_exception
 # from src.infrastructure.models.product import Product
 from src.infrastructure.repositories.contract_repo import ContractRepo
 from src.infrastructure.repositories.dmtt_repo import DmttRepo
+from src.infrastructure.repositories.product_repo import ProductRepo
 from src.infrastructure.services.excel_service import SheetDataFetcher
 
 
@@ -21,6 +22,7 @@ class LimitService():
         self._sheet_data_fetcher = SheetDataFetcher()
         self._dmtt_repo = DmttRepo()
         self._contract_repo = ContractRepo()
+        self._product_repo = ProductRepo()
 
     async def get_limit_by_dmtt(self, manager, company_id):
         dmtt_instance = await self._dmtt_repo.filter_one(user_id=manager.id)
@@ -36,12 +38,18 @@ class LimitService():
         limit_info_list = []
 
         for row in data:
+            name = row[self.name_column]
+            measure = row[self.measure_column]
+            limit = row[self.limit_column]
+            count = row[self.count_column]
+            product = await self._product_repo.get_or_create(name, measure)
 
             limit_info = LimitInfo(
-                name=row[self.name_column],
-                measure=row[self.measure_column],
-                limit=row[self.limit_column],
-                count=row[self.count_column]
+                name=name,
+                measure=measure,
+                limit=limit,
+                count=count,
+                image_url=product.image_url
             )
             limit_info_list.append(limit_info)
         limit_info_list.pop(0)
