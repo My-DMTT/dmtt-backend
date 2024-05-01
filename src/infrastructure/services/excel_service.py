@@ -59,7 +59,7 @@ class SheetDataFetcher():
                 new_data[0] = new_name
             else:
                 new_coumn_index = headers.index(new_name)
-                new_data = [float(item[new_coumn_index]) in values]
+                new_data = [item[new_coumn_index] in values]
 
             for item in data_list:
 
@@ -72,12 +72,13 @@ class SheetDataFetcher():
                     if not new_data[new_index]:
                         new_data[new_index] = item.count
                     else:
-                        new_data[new_index] += float(item.count)
+                        new_data[new_index] = float(
+                            new_data[new_index]) + float(item.count)
 
             cell_list = worksheet.range(
                 1, new_coumn_index, len(new_data), new_coumn_index)
             for i, cell in enumerate(cell_list):
-                cell.value = new_data[i]
+                cell.value = str(new_data[i])
             worksheet.update_cells(cell_list)
             return True
         except Exception as e:
