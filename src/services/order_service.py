@@ -57,10 +57,11 @@ class OrderService():
         return {"detail": "Ok"}
 
     async def change_order_status(self, order_id, status):
-        await self._order_repo.change_status(order_id, status)
         if status == OrderStatus.ACCEPTED:
             order = await self._order_repo.get(order_id)
             if not order:
+                raise not_found_exception("order")
+            if order.status == status:
                 raise not_found_exception("order")
             contract = await self._contract_repo.filter_one(dmtt_id=order.dmtt_id, company_id=order.company_id)
             if not contract:
@@ -76,6 +77,7 @@ class OrderService():
                 sheet_url=contract.excel_url,
                 data_list=data_list
             )
+        await self._order_repo.change_status(order_id, status)
 
     async def get_order_by_id(self, order_id):
         return await self._order_repo.get_order_with_items(order_id)
