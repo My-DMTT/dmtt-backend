@@ -63,6 +63,10 @@ class OrderItemAdmin(ModelView, model=OrderItems):
     column_list = ["product_name", "count"]
 
 
+class ProductAdmin(ModelView, model=Product):
+    column_list = ["name"]
+
+
 class UserAdmin(ModelView, model=User):
     name = "User"
     name_plural = "Users"
