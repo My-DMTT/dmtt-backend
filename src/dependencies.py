@@ -24,28 +24,36 @@ reuseable_oauth = OAuth2PasswordBearer(
 
 async def get_current_user(token: str = Depends(reuseable_oauth)):
     try:
-        payload = jwt.decode(
-            token, _token_service.SECRET_KEY, algorithms=[
-                _token_service.ALGORITHM]
-        )
-        token_data = TokenPayload(**payload)
+        token_data = None
+        try:
+            payload = jwt.decode(
+                token, _token_service.SECRET_KEY, algorithms=[
+                    _token_service.ALGORITHM]
+            )
+            token_data = TokenPayload(**payload)
 
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"Could not validate credentials {str(e.args)} {str(e)}",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        except Exception as e:
+            if not token_data:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail=f"Could not validate credentials {str(e.args)} {str(e)}",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
 
-    user = await _jwt_token_repo.get_user(token_data.jti)
+        user = await _jwt_token_repo.get_user(token_data.jti)
 
-    if user is None:
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Could not find user",
+            )
+
+        return user
+    except:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Could not find user",
         )
-
-    return user
 
 
 async def get_admin(user: User = Depends(get_current_user)):
