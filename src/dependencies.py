@@ -33,7 +33,7 @@ async def get_current_user(token: str = Depends(reuseable_oauth)):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"Could not validate credentials {str(e.args)} {str(e)} {str(token_data)}",
+            detail=f"Could not validate credentials {str(e.args)} {str(e)}",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
