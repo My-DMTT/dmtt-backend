@@ -36,7 +36,7 @@ class OrderService():
         company_items = {}
         for order_data in order_data_list:
             comp_id = order_data.company_id
-            if not comp_id in company_items:
+            if comp_id not in company_items:
                 company_items[comp_id] = []
             company_items[comp_id].append(
                 {"product_name": order_data.product_name, "count": order_data.count})
@@ -96,7 +96,6 @@ class OrderService():
 
 
 #
-
 
     async def get_accepted_orders_dmtt(self, user_id):
         return await self._order_repo.get_orders_by_status_dmtt(user_id, OrderStatus.ACCEPTED)

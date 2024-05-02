@@ -48,26 +48,32 @@ admin = Admin(app=app, engine=engine,
 class DmttAdmin(ModelView, model=Dmtt):
     icon = "fa-solid fa-school"
     column_list = ["name", "user"]
+    page_size = 25
 
 
 class ContractAdmin(ModelView, model=Contract):
     icon = "fa-solid fa-file-excel"
     column_list = ["dmtt", "company"]
+    page_size = 25
 
 
 class OrderAdmin(ModelView, model=Order):
     column_list = ["id", "dmtt", "company",]
+    page_size = 25
 
 
 class OrderItemAdmin(ModelView, model=OrderItems):
     column_list = ["product_name", "count"]
+    page_size = 25
 
 
 class ProductAdmin(ModelView, model=Product):
     column_list = ["name"]
+    page_size = 25
 
 
 class UserAdmin(ModelView, model=User):
+    page_size = 25
     name = "User"
     name_plural = "Users"
     icon = "fa-solid fa-user"
@@ -92,6 +98,7 @@ class UserAdmin(ModelView, model=User):
 class CompanyAdmin(ModelView, model=Company):
     icon = "fa-solid fa-company"
     column_list = "__all__"
+    page_size = 25
 
 
 admin.add_view(UserAdmin)
