@@ -36,7 +36,7 @@ async def get_current_user(token: str = Depends(reuseable_oauth)):
             if not token_data:
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
-                    detail=f"Could not validate credentials {str(e.args)} {str(e)}",
+                    detail=f"Could not validate credentials",
                     headers={"WWW-Authenticate": "Bearer"},
                 )
 
@@ -49,10 +49,10 @@ async def get_current_user(token: str = Depends(reuseable_oauth)):
             )
 
         return user
-    except:
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Could not find user",
+            detail=f"Could not find user {str(e.args)} {str(e)}",
         )
 
 
