@@ -1,4 +1,5 @@
-from typing import List,Optional
+from datetime import datetime
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import ORJSONResponse
@@ -34,8 +35,8 @@ async def get_in_progress_orders(user=Depends(get_current_user)):
 
 
 @router.post("/orders/")
-async def create_order_with_dmtt(dmtt_data: List[OrderCreate], user=Depends(get_current_user)):
-    return await service.create_order_with_items(user.id, dmtt_data)
+async def create_order_with_dmtt(dmtt_data: List[OrderCreate], deadline: Optional[datetime] = None, user=Depends(get_current_user)):
+    return await service.create_order_with_items(user_id=user.id, order_data_list=dmtt_data, deadline=deadline)
 
 
 @router.get("/orders/{order_id}", response_model=Optional[OrderResponse])

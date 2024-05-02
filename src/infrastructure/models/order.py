@@ -32,6 +32,7 @@ class Order(BaseModel):
         "dmtt.id", ondelete="Cascade"), nullable=False)
 
     datetime = Column(DateTime, default=get_current_datetime_tashkent)
+    deadline = Column(DateTime, nullable=True)
     order_status = Column(Enum(OrderStatus), default=OrderStatus.PENDING)
 
     company = relationship("Company")

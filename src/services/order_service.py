@@ -28,7 +28,7 @@ class OrderService():
         self._contract_repo = ContractRepo()
         self._order_items_repo = OrderItemsRepo()
 
-    async def create_order_with_items(self, user_id, order_data_list: List[OrderCreate]):
+    async def create_order_with_items(self, user_id, order_data_list: List[OrderCreate], deadline=None):
         dmtt = await self._dmtt_repo.filter_one(user_id=user_id)
         if not dmtt:
             raise not_found_exception("dmtt")
@@ -45,7 +45,7 @@ class OrderService():
             company = await self._company_repo.get(company_id)
             if not company:
                 raise not_found_exception("Company")
-            new_order = await self._order_repo.create_order_with_items(dmtt.id, company_id, order_data)
+            new_order = await self._order_repo.create_order_with_items(dmtt.id, company_id, deadline, order_data)
             company_user = await self._user_repo.get(company.user_id)
             if company_user and company_user.tg_user_id:
                 params = {

@@ -35,7 +35,7 @@ class OrderRepo(CRUDRepoBase):
             return (
                 session.query(Order)
                 .filter(Order.order_status == status)
-                .options(joinedload(Order.items),joinedload(Order.company))
+                .options(joinedload(Order.items), joinedload(Order.company))
                 .join(Dmtt, Dmtt.id == Order.dmtt_id)
                 .options(contains_eager(Order.dmtt))
                 .filter(Dmtt.user_id == user_id)
@@ -46,14 +46,15 @@ class OrderRepo(CRUDRepoBase):
         with get_db() as session:
             return (
                 session.query(Order)
-                .options(joinedload(Order.items), joinedload(Order.dmtt),joinedload(Order.company))
+                .options(joinedload(Order.items), joinedload(Order.dmtt), joinedload(Order.company))
                 .filter(Order.id == order_id)
                 .first()
             )
 
-    async def create_order_with_items(self, dmtt_id, company_id, obj_in) -> Order:
+    async def create_order_with_items(self, dmtt_id, company_id, deadline, obj_in) -> Order:
         with get_db() as session:
-            new_order = Order(company_id=company_id, dmtt_id=dmtt_id)
+            new_order = Order(company_id=company_id,
+                              dmtt_id=dmtt_id, deadline=deadline)
             session.add(new_order)
             session.flush()
 
