@@ -29,10 +29,11 @@ async def get_current_user(token: str = Depends(reuseable_oauth)):
                 _token_service.ALGORITHM]
         )
         token_data = TokenPayload(**payload)
-    except (jwt.JWTError, ValidationError):
+
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Could not validate credentials",
+            detail=f"Could not validate credentials {str(e.args)} {str(e)}",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
