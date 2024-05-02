@@ -11,7 +11,7 @@ class TokenSchema(BaseModel):
 
 class TokenPayload(BaseModel):
     sub: str = None
-    exp: int = None
+    # exp: int = None
     jti: str
 
 

@@ -22,10 +22,10 @@ class TokenService():
         return verification_code
 
     def create_access_token(self, user_id, jti) -> str:
-        expiration_time = datetime.now() + timedelta(minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES)
+        # expiration_time = datetime.now() + timedelta(minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES)
         to_encode = {
             "sub": str(user_id),
-            "exp": expiration_time,
+            # "exp": expiration_time,
             "token_type": "access",
             "jti": str(jti)
         }
