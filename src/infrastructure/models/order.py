@@ -1,10 +1,19 @@
 import enum
+from datetime import datetime, timedelta
 
+import pytz
 from sqlalchemy import (Column, DateTime, Enum, Float, ForeignKey, Integer,
                         String, func)
 from sqlalchemy.orm import relationship
 
 from src.infrastructure.models.base import BaseModel
+
+# from datetime import timezone
+
+
+def get_current_datetime_tashkent():
+    tz_tashkent = pytz.timezone('Asia/Tashkent')
+    return datetime.now(tz_tashkent)
 
 
 class OrderStatus(enum.Enum):
@@ -22,7 +31,7 @@ class Order(BaseModel):
     dmtt_id = Column(Integer, ForeignKey(
         "dmtt.id", ondelete="Cascade"), nullable=False)
 
-    datetime = Column(DateTime, server_default=func.now())
+    datetime = Column(DateTime, default=get_current_datetime_tashkent)
     order_status = Column(Enum(OrderStatus), default=OrderStatus.PENDING)
 
     company = relationship("Company")

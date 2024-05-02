@@ -1,14 +1,18 @@
-from docxtpl import DocxTemplate
+from datetime import datetime
 
-doc = DocxTemplate("temp.docx")
-data = {
-    "company_name": "Abdusalom Yuksak Kelajak",
-    "dmtt_name": "1-dmtt",
-    "dmtt_address": "Toshloq",
-    "company_phone": "+998905360968",
-    "items": [["Olma", 5], ["Olma", 5], ["Olma", 5], ["Olma", 5], ["Olma", 5]]
-}
+import pytz
 
-doc.render(context=data)
 
-doc.save("fs.docx")
+def get_current_datetime_tashkent():
+    # Установка часового пояса для Ташкента
+    tz_tashkent = pytz.timezone('Asia/Tashkent')
+
+    # Получение текущего времени в заданном часовом поясе
+    datetime_tashkent = datetime.now(tz_tashkent)
+
+    return datetime_tashkent
+
+
+# Вызов функции
+current_datetime_tashkent = get_current_datetime_tashkent()
+print(current_datetime_tashkent)
