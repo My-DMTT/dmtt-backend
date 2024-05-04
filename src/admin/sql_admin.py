@@ -62,7 +62,7 @@ class OrderAdmin(ModelView, model=Order):
     page_size = 25
     can_create = False
     column_sortable_list = [Order.id]
-    column_default_sort = ("id", False)
+    column_default_sort = ("id", True)
 
 
 class OrderItemAdmin(ModelView, model=OrderItems):
