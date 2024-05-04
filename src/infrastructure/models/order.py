@@ -36,7 +36,7 @@ class Order(BaseModel):
     order_status = Column(Enum(OrderStatus), default=OrderStatus.PENDING)
 
     company = relationship("Company")
-    dmtt = relationship("Dmtt")
+    dmtt = relationship("Dmtt", lazy="joined")
     items = relationship("OrderItems", back_populates="order")
 
     def __str__(self):
@@ -45,7 +45,7 @@ class Order(BaseModel):
 
 class OrderItems(BaseModel):
     __tablename__ = "order_items"
-    order_id = Column(ForeignKey("orders.id", ondelete="Cascade"))
+    order_id = Column(ForeignKey("orders.id", ondelete="CASCADE"))
     product_name = Column(String(127), nullable=False)
     count = Column(Float, nullable=False)
 

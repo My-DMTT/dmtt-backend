@@ -60,11 +60,15 @@ class ContractAdmin(ModelView, model=Contract):
 class OrderAdmin(ModelView, model=Order):
     column_list = ["id", "dmtt", "company",]
     page_size = 25
+    can_create = False
+    column_sortable_list = [Order.id]
+    column_default_sort = ("id", False)
 
 
 class OrderItemAdmin(ModelView, model=OrderItems):
     column_list = ["product_name", "count"]
     page_size = 25
+    # column_exclude_list = ["order_id",]
 
 
 class ProductAdmin(ModelView, model=Product):
