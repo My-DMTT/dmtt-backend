@@ -16,12 +16,12 @@ class UserBase(PydanticBaseModel):
     last_name: str = Field(..., max_length=50)
     phone_number: Optional[str] = Field(..., max_length=15)
     username: Optional[str] = Field(..., max_length=50)
-    password: Optional[str] = Field(..., max_length=255)
+
     district: Optional[str] = Field(..., max_length=255)
 
 
 class UserCreate(UserBase):
-    pass
+    password: Optional[str] = Field(..., max_length=255)
 
 
 class UserInfo(UserBase):

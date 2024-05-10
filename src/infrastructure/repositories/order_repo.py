@@ -1,5 +1,6 @@
 from sqlalchemy.orm import contains_eager, joinedload
 
+from src.api.schemas.order_schema import FullOrderDetailResponse
 from src.infrastructure.database.adapters.database import get_db
 from src.infrastructure.models.company import Company
 from src.infrastructure.models.dmtt import Dmtt
@@ -44,12 +45,13 @@ class OrderRepo(CRUDRepoBase):
 
     async def get_order_with_items(self, order_id):
         with get_db() as session:
-            return (
+            data = (
                 session.query(Order)
                 .options(joinedload(Order.items), joinedload(Order.dmtt), joinedload(Order.company))
                 .filter(Order.id == order_id)
                 .first()
             )
+            return FullOrderDetailResponse.model_validate(data)
 
     async def create_order_with_items(self, dmtt_id, company_id, deadline, obj_in) -> Order:
         with get_db() as session:

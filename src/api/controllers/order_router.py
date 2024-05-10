@@ -4,7 +4,8 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends
 from fastapi.responses import ORJSONResponse
 
-from src.api.schemas.order_schema import OrderCreate, OrderResponse
+from src.api.schemas.order_schema import (FullOrderDetailResponse, OrderCreate,
+                                          OrderResponse)
 from src.dependencies import get_current_user
 from src.services.order_service import OrderService
 
@@ -39,7 +40,10 @@ async def create_order_with_dmtt(dmtt_data: List[OrderCreate], deadline: Optiona
     return await service.create_order_with_items(user_id=user.id, order_data_list=dmtt_data, deadline=deadline)
 
 
-@router.get("/orders/{order_id}", response_model=Optional[OrderResponse])
+@router.get("/orders/{order_id}", response_model=Optional[FullOrderDetailResponse])
 async def get_all_dmtt(order_id: int):
+    """
+        order detail ma'umotlar
+    """
     data = await service.get_order_by_id(order_id)
     return data

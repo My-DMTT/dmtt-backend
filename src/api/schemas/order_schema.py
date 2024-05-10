@@ -1,9 +1,12 @@
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
+
 from pydantic import BaseModel
 
-from src.api.schemas.dmtt_schema import DmttInfo
 from src.api.schemas.company_schema import CompanyInfo
+from src.api.schemas.dmtt_schema import DmttInfo
+from src.api.schemas.user_schema import UserInfo
+
 
 class OrderItemInfo(BaseModel):
     product_name: str
@@ -24,20 +27,28 @@ class ListOrderCreate(BaseModel):
 class OrderResponse(BaseModel):
     id: int
     dmtt: Optional[DmttInfo]
-    company:Optional[CompanyInfo]
+    company: Optional[CompanyInfo]
     order_status: str
-    datetime:Optional[datetime]
+    datetime: Optional[datetime]
     items: List[OrderItemInfo]
 
     class Config:
         from_attributes = True
 
 
+class FullDmttInfo(DmttInfo):
+    user: Optional[UserInfo]
+
+
+class FullOrderDetailResponse(OrderResponse):
+    dmtt: Optional[FullDmttInfo]
+
+
 class BotOrderResponse(BaseModel):
     id: int
     # dmtt: Optional[DmttInfo]
     order_status: str
-    datetime:Optional[datetime]
+    datetime: Optional[datetime]
     items: List[OrderItemInfo]
 
     class Config:
