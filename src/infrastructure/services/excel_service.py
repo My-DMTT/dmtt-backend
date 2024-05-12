@@ -91,4 +91,15 @@ class SheetDataFetcher():
         formatted_date = current_date.strftime('%d/%m/%y')
         return formatted_date
 
+    async def get_data_frame(self, sheet_url, sheet_name):
+        try:
+            spreadsheet = self.client.open_by_url(sheet_url)
+            worksheet = spreadsheet.worksheet(sheet_name)
+            df = pd.DataFrame(worksheet.get_all_records(
+                expected_headers=["Narxi", "Mahsulot nomi"]))
+            filtered_df = df[['Mahsulot nomi', 'Narxi']]
+            return filtered_df
+        except Exception as e:
+            raise_exception(e.args)
+            return None
 # Example usage:

@@ -1,6 +1,11 @@
 from pydantic import BaseModel
 
 
+class ProductPrices(BaseModel):
+    name: str
+    price: int
+
+
 class ProductCreate(BaseModel):
     name: str
     measure: str
