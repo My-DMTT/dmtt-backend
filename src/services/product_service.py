@@ -40,7 +40,7 @@ class ProductService():
         for index, row in data.iterrows():
             if row["Mahsulot nomi"] and row["Narxi"]:
                 product = {"name": row['Mahsulot nomi'],
-                           "price": int(row['Narxi'].replace(" ", ""))}
+                           "price": int(row['Narxi'].replace(" ", "")), "measure": row["O'lchov birligi"]}
                 valid_products.append(product)
 
         return valid_products

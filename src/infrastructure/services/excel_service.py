@@ -96,8 +96,8 @@ class SheetDataFetcher():
             spreadsheet = self.client.open_by_url(sheet_url)
             worksheet = spreadsheet.worksheet(sheet_name)
             df = pd.DataFrame(worksheet.get_all_records(
-                expected_headers=["Narxi", "Mahsulot nomi"]))
-            filtered_df = df[['Mahsulot nomi', 'Narxi']]
+                expected_headers=["Narxi", "Mahsulot nomi", "O'lchov birligi"]))
+            filtered_df = df[['Mahsulot nomi', 'Narxi', "O'lchov birligi"]]
             return filtered_df
         except Exception as e:
             raise_exception(e.args)
