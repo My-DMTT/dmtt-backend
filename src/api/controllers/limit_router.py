@@ -1,5 +1,5 @@
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from fastapi import APIRouter, Depends
 
@@ -21,9 +21,9 @@ async def get_limit_dmtt(company_id: int, manager=Depends(get_current_manager)):
     return data
 
 
-@router.get("/limit-factura", response_model=List[LimitFactura])
-async def get_limit_dmtt(user=Depends(get_user_by_tg_id)):
+@router.get("/limit-factura", response_model=Optional[LimitFactura])
+async def get_limit_dmtt(contract_id: int, user=Depends(get_user_by_tg_id)):
     data = await limit_service.get_limit_faktura(
-        user_id=user.id
+        contract_id
     )
     return data

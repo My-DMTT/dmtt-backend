@@ -18,3 +18,6 @@ class ContractService():
             raise not_found_exception("dmtt")
 
         return await self._repo.get_companies(dmtt_id=dmtt.id)
+
+    async def get_all_contracts(self, user_id):
+        return self._repo.get_contracts(user_id)

@@ -12,3 +12,9 @@ class ContractRepo(CRUDRepoBase):
             instance_list = session.query(Company).join(
                 Contract, Contract.company_id == Company.id).filter(Contract.dmtt_id == dmtt_id).all()
             return instance_list
+
+    async def get_contracts(self, user_id):
+        with get_db() as session:
+            instance_list = session.query(Contract).join(
+                Company, Contract.company_id == Company.id).filter(Company.user_id == user_id).all()
+            return instance_list
