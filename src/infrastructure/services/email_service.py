@@ -1,13 +1,27 @@
+import asyncio
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 import gspread
 import pandas as pd
 from oauth2client.service_account import ServiceAccountCredentials
 from pydantic import BaseModel
 
-# from src.domain.exceptions import raise_exception
+from src.infrastructure.repositories.product_repo import ProductRepo
 
+
+class LimitInfo(BaseModel):
+    name: str
+    measure: str
+    limit: str
+    image_url: Optional[str]
+    count: str
+
+    class Config:
+        from_attributes = True
+
+
+# from src.domain.exceptions import raise_exception
 filename = "src/infrastructure/services/dmtt.json"
 
 
@@ -23,7 +37,10 @@ class SheetDataFetcher():
             filename)
         self.client = gspread.authorize(self.credentials)
 
-    async def get_data(self, sheet_url, sheet_name):
+    def get_data(self,
+                 sheet_url="https://docs.google.com/spreadsheets/d/1-Uz2puXapAvyNw2bkrdwQLRZ4rRn6gd8Tnh2Ck6vvvA/edit?copiedFromTrash#gid=0",
+                 sheet_name="December"
+                 ):
         try:
             spreadsheet = self.client.open_by_url(sheet_url)
             worksheet = spreadsheet.worksheet(sheet_name)
@@ -93,11 +110,33 @@ class SheetDataFetcher():
 # Example usage:
 
 
+_product_repo = ProductRepo()
 # Example usage:
-s = SheetDataFetcher()
-# k = s.get_data()
-s.add_data(data_list=[
-    DataModel(product_name="Manniy yormasi", count=6.0),
-    DataModel(product_name="Oq bosh karam", count=10.4)
-])
-# print(k)
+
+
+async def test():
+    s = SheetDataFetcher()
+    # k = s.get_data()
+    data = s.get_data()
+    limit_info_list = []
+
+    for index, row in enumerate(data):
+        name = row[1]
+        measure = row[2]
+        limit = row[3]
+        count = row[-1]
+        if index == 0:
+            continue
+        product = await _product_repo.get_or_create(name, measure)
+
+        limit_info = LimitInfo(
+            name=name,
+            measure=measure,
+            limit=limit,
+            count=count,
+            image_url=product.image_url
+        )
+        limit_info_list.append(limit_info)
+    return limit_info_list
+p = asyncio.run(test())
+print(p)

@@ -12,9 +12,6 @@ class UserRoleEnum(enum.Enum):
     business_man = "business_man"
 
 
-# user_roles_list = [role.value for role in UserRoleEnum]
-
-
 class User(BaseModel):
     __tablename__ = "users"
     first_name = Column(String(50), default="user")

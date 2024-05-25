@@ -2,10 +2,10 @@ from fastapi import HTTPException
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-# from src.api.schemas.product import ProductCreate
-from src.api.schemas.limit_schema import LimitInfo
+from src.api.schemas.limit_schema import (FullDmttInfo, LimitFactura,
+                                          LimitInfo, ShortLimitInfo)
 from src.domain.exceptions import not_found_exception
-# from src.infrastructure.models.product import Product
+from src.infrastructure.repositories.company_repo import CompanyRepo
 from src.infrastructure.repositories.contract_repo import ContractRepo
 from src.infrastructure.repositories.dmtt_repo import DmttRepo
 from src.infrastructure.repositories.product_repo import ProductRepo
@@ -23,6 +23,7 @@ class LimitService():
         self._dmtt_repo = DmttRepo()
         self._contract_repo = ContractRepo()
         self._product_repo = ProductRepo()
+        self._company_repo = CompanyRepo()
 
     async def get_limit_by_dmtt(self, manager, company_id):
         dmtt_instance = await self._dmtt_repo.filter_one(user_id=manager.id)
@@ -34,7 +35,6 @@ class LimitService():
 
         data = await self._sheet_data_fetcher.get_data(sheet_url=contract.excel_url, sheet_name=contract.active_sheet_name)
 
-        # Преобразование данных в список объектов LimitInfo
         limit_info_list = []
 
         for index, row in enumerate(data):
@@ -55,3 +55,39 @@ class LimitService():
             )
             limit_info_list.append(limit_info)
         return limit_info_list
+
+    async def get_limit_faktura(self, user_id):
+        faktura_data = []
+        companies = await self._company_repo.filter(user_id=user_id)
+        for company in companies:
+            full_company_data = await self._company_repo.get_full_info(company.id)
+            contracts = await self._contract_repo.filter(company_id=company.id)
+            for contract in contracts:
+                data = await self._sheet_data_fetcher.get_data(sheet_url=contract.excel_url, sheet_name=contract.active_sheet_name)
+                dmtt_data = await self._dmtt_repo.get_full_info(contract.dmtt_id)
+                limit_info_list = []
+
+                for index, row in enumerate(data):
+                    name = row[self.name_column]
+                    measure = row[self.measure_column]
+                    limit = row[self.limit_column]
+                    count = row[self.count_column]
+                    if index == 0:
+                        continue
+
+                    limit_info = {
+                        "name": name,
+                        "measure": measure,
+                        "limit": limit,
+                        "count": count
+                    }
+                    limit_info_list.append(limit_info)
+                faktura_data.append(
+                    {
+                        "company": full_company_data,
+                        "dmtt": dmtt_data,
+                        "items": limit_info_list
+                    }
+
+                )
+        return faktura_data

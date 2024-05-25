@@ -17,6 +17,3 @@ def get_work():
 app.include_router(base_router)
 app.include_router(bot_router)
 app.mount("/", a_router)
-
-
-# app.include_router(order_router.router)
