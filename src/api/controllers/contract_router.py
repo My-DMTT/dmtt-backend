@@ -20,5 +20,5 @@ async def create_dmtt(user=Depends(get_current_user)):
 
 
 @router.get("/contracts", response_model=List[ContractShcema])
-async def create_dmtt(user=Depends(get_current_user)):
+async def create_dmtt(user=Depends(get_user_by_tg_id)):
     return await service.get_all_contracts(user.id)
