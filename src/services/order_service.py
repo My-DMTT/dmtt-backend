@@ -49,7 +49,7 @@ class OrderService():
             company_user = await self._user_repo.get(company.user_id)
             if company_user and company_user.tg_user_id:
                 params = {
-                    "msg": f"{dmtt.name} zakaz berdi \n Buyurtma raqami: {new_order.id}",
+                    "msg": f"{dmtt.name} zakaz berdi \n Buyurtma raqami: {new_order.sequence_number}",
                     "user_id": company_user.tg_user_id,
                     "order_id": new_order.id
                 }

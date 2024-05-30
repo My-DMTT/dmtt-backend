@@ -29,6 +29,7 @@ class OrderResponse(BaseModel):
     dmtt: Optional[DmttInfo]
     company: Optional[CompanyInfo]
     order_status: str
+    sequence_number: Optional[int]
     datetime: Optional[datetime]
     items: List[OrderItemInfo]
 
@@ -47,6 +48,7 @@ class FullOrderDetailResponse(OrderResponse):
 class BotOrderResponse(BaseModel):
     id: int
     # dmtt: Optional[DmttInfo]
+    sequence_number: Optional[int]
     order_status: str
     datetime: Optional[datetime]
     items: List[OrderItemInfo]

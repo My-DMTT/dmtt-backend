@@ -13,6 +13,7 @@ class Company(BaseModel):
     phone_number = Column(String(15))
     stir = Column(String(10), nullable=True)
     is_active = Column(Boolean(), default=True)
+    current_sequence = Column(Integer, default=0)
 
     user = relationship("User")
 

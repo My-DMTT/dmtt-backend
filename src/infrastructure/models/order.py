@@ -34,6 +34,7 @@ class Order(BaseModel):
     datetime = Column(DateTime, default=get_current_datetime_tashkent)
     deadline = Column(DateTime, nullable=True)
     order_status = Column(Enum(OrderStatus), default=OrderStatus.PENDING)
+    sequence_number = Column(Integer, nullable=False, default=1)
 
     company = relationship("Company")
     dmtt = relationship("Dmtt", lazy="joined")

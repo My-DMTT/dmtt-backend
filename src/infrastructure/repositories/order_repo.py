@@ -55,8 +55,14 @@ class OrderRepo(CRUDRepoBase):
 
     async def create_order_with_items(self, dmtt_id, company_id, deadline, obj_in) -> Order:
         with get_db() as session:
+            company = session.query(Company).filter_by(id=company_id).first()
+            sequence_number = 1
+            if company:
+                company.current_sequence += 1
+                sequence_number = company.current_sequence
+                session.commit()
             new_order = Order(company_id=company_id,
-                              dmtt_id=dmtt_id, deadline=deadline)
+                              dmtt_id=dmtt_id, deadline=deadline, sequence_number=sequence_number)
             session.add(new_order)
             session.flush()
 
