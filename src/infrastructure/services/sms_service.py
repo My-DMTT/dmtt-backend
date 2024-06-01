@@ -53,3 +53,7 @@ class SmsService():
     def send_accept_order_sms(self, phone, order_number):
         text = f"{order_number}-sonli buyurtmangiz qabul qilindi."
         self._send_sms_in_thread(phone=phone, text=text)
+
+    def send_done_order_sms(self, phone, order_number):
+        text = f"MyDMTT\n{order_number}-sonli buyurtmangiz bo'yicha mahsulotlar yetkazildi"
+        self._send_sms_in_thread(phone=phone, text=text)
