@@ -15,10 +15,12 @@ from src.infrastructure.repositories.product_repo import ProductRepo
 from src.infrastructure.repositories.user_repo import UserRepo
 from src.infrastructure.services.excel_service import (DataModel,
                                                        SheetDataFetcher)
+from src.infrastructure.services.sms_service import SmsService
 
 
 class OrderService():
     def __init__(self) -> None:
+        self._sms_service = SmsService()
         self._order_repo = OrderRepo()
         self._product_repo = ProductRepo()
         self._dmtt_repo = DmttRepo()
@@ -77,6 +79,9 @@ class OrderService():
                 sheet_url=contract.excel_url,
                 data_list=data_list
             )
+            dmtt_user = await self._dmtt_repo.get_full_info(order.dmtt_id).user
+            self._sms_service.send_accept_order_sms(
+                phone=dmtt_user.phone_number, order_number=order_id)
         await self._order_repo.change_status(order_id, status)
 
     async def get_order_by_id(self, order_id):
@@ -96,6 +101,7 @@ class OrderService():
 
 
 #
+
 
     async def get_accepted_orders_dmtt(self, user_id):
         return await self._order_repo.get_orders_by_status_dmtt(user_id, OrderStatus.ACCEPTED)

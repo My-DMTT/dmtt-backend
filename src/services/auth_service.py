@@ -5,7 +5,6 @@ from src.domain.models.jti_model import OtpCodeSchema, SecuirtyJtiSchema
 from src.infrastructure.repositories.jwt_token_repo import (JWTTokenRepo,
                                                             OtpCodesRepo)
 from src.infrastructure.repositories.user_repo import ManagerRepo, UserRepo
-from src.infrastructure.services.sms_service import send_sms
 from src.infrastructure.services.token_service import TokenService
 
 
@@ -35,7 +34,7 @@ class AuthService():
         await self._otp_code_repo.create(
             OtpCodeSchema(phone_number=phone_number, code=code)
         )
-        send_sms(phone_number=phone_number, data=code)
+        # send_sms(phone_number=phone_number, data=code)
         return {
             "detail": "Code sent sucessfully"
         }
