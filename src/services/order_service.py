@@ -79,11 +79,13 @@ class OrderService():
                 sheet_url=contract.excel_url,
                 data_list=data_list
             )
+
+        await self._order_repo.change_status(order_id, status)
+        if status == OrderStatus.IN_PROGRESS:
             dmtt = await self._dmtt_repo.get_full_info(order.dmtt_id)
             dmtt_user = dmtt.user
             self._sms_service.send_accept_order_sms(
                 phone=dmtt_user.phone_number, order_number=order_id)
-        await self._order_repo.change_status(order_id, status)
 
     async def get_order_by_id(self, order_id):
         return await self._order_repo.get_order_with_items(order_id)
