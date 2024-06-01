@@ -79,7 +79,8 @@ class OrderService():
                 sheet_url=contract.excel_url,
                 data_list=data_list
             )
-            dmtt_user = await self._dmtt_repo.get_full_info(order.dmtt_id).user
+            dmtt = await self._dmtt_repo.get_full_info(order.dmtt_id)
+            dmtt_user = dmtt.user
             self._sms_service.send_accept_order_sms(
                 phone=dmtt_user.phone_number, order_number=order_id)
         await self._order_repo.change_status(order_id, status)
