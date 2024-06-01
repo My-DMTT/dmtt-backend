@@ -59,8 +59,8 @@ class OrderService():
         return {"detail": "Ok"}
 
     async def change_order_status(self, order_id, status):
+        order = await self._order_repo.get(order_id)
         if status == OrderStatus.ACCEPTED:
-            order = await self._order_repo.get(order_id)
             if not order:
                 raise not_found_exception("order")
             if order.order_status == status:
