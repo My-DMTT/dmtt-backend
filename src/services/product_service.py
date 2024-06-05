@@ -36,7 +36,7 @@ class ProductService():
 
     async def get_product_prices(self,):
         valid_products = []
-        data = await self._sheet_data_fetcher.get_data_frame("https://docs.google.com/spreadsheets/d/1rblVzQahN49HfWqUnFub-riA7kfXT3f-IUyomhi7IrA/edit#gid=0", "May")
+        data = await self._sheet_data_fetcher.get_data_frame("https://docs.google.com/spreadsheets/d/1rblVzQahN49HfWqUnFub-riA7kfXT3f-IUyomhi7IrA/edit#gid=0", "Iyun")
         for index, row in data.iterrows():
             if row["Mahsulot nomi"] and row["Narxi"]:
                 product = {"name": row['Mahsulot nomi'],
