@@ -4,23 +4,9 @@ from datetime import datetime, timedelta
 import pytz
 from sqlalchemy import (Column, DateTime, Enum, Float, ForeignKey, Integer,
                         String, func)
-from sqlalchemy.orm import backref, relationship
+from sqlalchemy.orm import relationship
 
-from src.infrastructure.models.base import BaseModel
-
-# from datetime import timezone
-
-
-def get_current_datetime_tashkent():
-    tz_tashkent = pytz.timezone('Asia/Tashkent')
-    return datetime.now(tz_tashkent)
-
-
-class OrderStatus(enum.Enum):
-    PENDING = 'pending'
-    IN_PROGRESS = 'in progress'
-    REJECTED = 'rejected'
-    ACCEPTED = 'accepted'
+f
 
 
 class Order(BaseModel):
@@ -46,12 +32,11 @@ class Order(BaseModel):
 
 class OrderItems(BaseModel):
     __tablename__ = "order_items"
-    order_id = Column(ForeignKey(
-        "orders.id", ondelete="CASCADE"), nullable=False)
+    order_id = Column(ForeignKey("orders.id", ondelete="CASCADE"))
     product_name = Column(String(127), nullable=False)
     count = Column(Float, nullable=False)
 
-    order = relationship("Order", passive_deletes=True)
+    order = relationship("Order", back_populates="items")
 
     def __str__(self) -> str:
         return f"{self.product_name} {self.count}"
